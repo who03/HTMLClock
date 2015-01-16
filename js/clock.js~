@@ -1,0 +1,8 @@
+
+function getTime() {
+   var curr = new Date();
+   document.getElementById("time").innerHTML = 
+      curr.getHours() + ":" curr.getMinutes() + ":" + curr.getSeconds();
+   setTimeout(getTime(), 1000);
+}
+getTime();
