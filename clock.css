@@ -1,6 +1,6 @@
 body {
-   background-color:purple;
-   color:white;
+   background-color:MintCream;
+   color:black;
 }
 p {
    font-size:16px;
@@ -14,3 +14,24 @@ p {
 .bd {
 	text-align:center;
 }
+
+.cold {
+	color:#95A5A6;
+}
+
+.chilly {
+	color:#1ABC9C;
+}
+
+.nice {
+	color:#2980B9;
+}
+
+.warm {
+	color:#E67E22;
+}
+
+.hot {
+	color:#E74C3C;
+}
+
