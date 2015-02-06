@@ -33,6 +33,21 @@ function getTemp() {
 		});
 }
 
+function getAllAlarms() {
+	Parse.initialize("P1bdGllccdIegm0srtvRbqp1jJePkNywFGHWW8zF", "0a5VvbSayMudMFNEfjoCgc7j0O24TYd7pPOmavNM");
+	var AlarmObject = Parse.Object.extend("Alarm");
+	var query = new Parse.Query(AlarmObject);
+	query.find({
+		success: function(results) {
+			for (var i = 0; i < results.length; i++) {
+				var time = results[i].get("time");
+				insertAlarm(time.hours, time.mins, time.ampm,
+				results[i].get("alarmName"));
+			}
+		}
+	});
+}
+
 function showAlarmPopup() {
 	$("#mask").removeClass("hide");
 	$("#popup").removeClass("hide");
@@ -44,25 +59,67 @@ function hideAlarmPopup() {
 }
 
 function insertAlarm(hours, mins, ampm, alarmName) {
-	var newDiv = $("<div>").addClass("flexable");
+	var newDiv = $("<div>").addClass("flexable").attr("id", alarmName);
 	var div1 = $("<div>").addClass("name").html(alarmName);
 	var div2 = $("<div>").addClass("time").html(hours + ":" + mins + ampm);
+	var deleteButton = $("<input>")
+		.attr("type", "button")
+		.attr("id", "alarm" + alarmName)
+		.attr("value", "Delete")
+		.attr("onclick","deleteAlarm('" + alarmName + "')")
+		.addClass("button");
 	newDiv.append(div1)
-	      .append(div2);
+	      .append(div2)
+	      .append(deleteButton);
 	          
 	$("#alarms").append(newDiv);
 	hideAlarmPopup();
 }
 
+function deleteAlarm(alarmName) {
+	var AlarmObject = Parse.Object.extend("Alarm");
+	var query = new Parse.Query(AlarmObject);
+	query.equalTo("alarmName", alarmName);
+	query.find({
+		success: function(results) {
+			for (var i = 0; i < results.length; i++) {
+				var obj = results[i];
+				if (obj.alarmName = alarmName) {
+					obj.destroy({
+						success: function(object) {
+							$("div[id='" + alarmName+ "']").remove();
+						}
+					});
+				}
+			}
+		}
+	});
+	//$("#alarm" + alarmName).remove();
+}
+
 function addAlarm() {
 	var hours = $("#hours option:selected").text();
-   var mins = $("#mins option:selected").text();
+	var mins = $("#mins option:selected").text();
 	var ampm = $("#ampm option:selected").text();
 	var alarmName = $("input[type='text']").val();
 	
-	insertAlarm(hours, mins, ampm, alarmName);
-	hideAlarmPopup();
+	var AlarmObject = Parse.Object.extend("Alarm");
+	var alarmObject = new AlarmObject();
+	var time = {
+		hours : hours,
+		mins : mins,
+		ampm : ampm,
+	};
+	alarmObject.save({"time": time, "alarmName": alarmName}, {
+					 success: function(object) {
+							insertAlarm(hours, mins, ampm, alarmName);
+							hideAlarmPopup();
+						}
+					 });
 }
 
-window.onload = getTemp;
+window.onload = function() {
+	getTemp();
+	getAllAlarms();
+}
 
