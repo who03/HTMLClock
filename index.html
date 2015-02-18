@@ -5,6 +5,12 @@
        <title> Clock </title> 
        <link href="css/clock.css" rel="stylesheet" type="text/css">
        <link href="css/alarm.css" rel="stylesheet" type="text/css">
+       <meta name="google-signin-clientid" content="CLIENT_ID" />
+      <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login" />
+      <meta name="google-signin-requestvisibleactions" content="http://schema.org/AddAction" />
+      <meta name="google-signin-cookiepolicy" content="single_host_origin" />
+      <meta name="google-signin-callback" content="signinCallback" />
+       <script src="https://apis.google.com/js/client:platform.js" async defer></script>
 </head>
 
 <body class="bd">
@@ -15,8 +21,17 @@
 <div id="alarmContainer">
 	<div id="alarmHeader" class="flexable">
 		<h2> Alarms </h2>
-		<input type="button" value="Add Alarm" class="button" onclick="showAlarmPopup()"/>
+		<input id="signedIn" type="button" value="Add Alarm" class="hide" onclick="showAlarmPopup()"/>
 	</div>
+	<span id="signinButton">
+	  <span
+		class="g-signin"
+		data-callback="signinCallback"
+		data-clientid="848870107982-37it75g95m1p712oqm6dbhi9jhsnqvf5.apps.googleusercontent.com"
+		data-cookiepolicy="single_host_origin"
+		data-scope="https://www.googleapis.com/auth/plus.login">
+	  </span>
+	</span>
 	<div id="alarms"></div>
 </div>
 <div id="mask" class="hide"></div>

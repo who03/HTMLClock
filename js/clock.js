@@ -1,3 +1,4 @@
+var currentUserId;
 
 function getTime() {
    var curr = new Date();
@@ -33,10 +34,12 @@ function getTemp() {
 		});
 }
 
-function getAllAlarms() {
+function getAllAlarms(userId) {
 	Parse.initialize("P1bdGllccdIegm0srtvRbqp1jJePkNywFGHWW8zF", "0a5VvbSayMudMFNEfjoCgc7j0O24TYd7pPOmavNM");
 	var AlarmObject = Parse.Object.extend("Alarm");
 	var query = new Parse.Query(AlarmObject);
+	currentUserId = userId;
+	query.equalTo("userId", currentUserId);
 	query.find({
 		success: function(results) {
 			for (var i = 0; i < results.length; i++) {
@@ -110,7 +113,7 @@ function addAlarm() {
 		mins : mins,
 		ampm : ampm,
 	};
-	alarmObject.save({"time": time, "alarmName": alarmName}, {
+	alarmObject.save({"time": time, "alarmName": alarmName, "userId": currentUserId}, {
 					 success: function(object) {
 							insertAlarm(hours, mins, ampm, alarmName);
 							hideAlarmPopup();
@@ -118,8 +121,25 @@ function addAlarm() {
 					 });
 }
 
+function signinCallback(authResult) {
+  if (authResult['status']['signed_in']) {
+    // Update the app to reflect a signed in user
+    // Hide the sign-in button now that the user is authorized, for example:
+    getAllAlarms(authResult['id_token']);
+    $("#signedIn").removeClass("hide");
+    document.getElementById('signinButton').setAttribute('style', 'display: none');
+  } else {
+    // Update the app to reflect a signed out user
+    // Possible error values:
+    //   "user_signed_out" - User is signed-out
+    //   "access_denied" - User denied access to your app
+    //   "immediate_failed" - Could not automatically log in the user
+    $("#signedIn").addClass("hide");
+    console.log('Sign-in state: ' + authResult['error']);
+  }
+}
+
 window.onload = function() {
 	getTemp();
-	getAllAlarms();
 }
 
