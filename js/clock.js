@@ -125,6 +125,7 @@ function signinCallbackFunc(authResult) {
   if (authResult['status']['signed_in']) {
     // Update the app to reflect a signed in user
     // Hide the sign-in button now that the user is authorized, for example:
+    console.log('Sign-in success:' + authResult['id_token']['sub']);
     getAllAlarms(authResult['id_token']['sub']);
     $("#signedIn").removeClass("hide");
     document.getElementById('signinButton').setAttribute('style', 'display: none');
