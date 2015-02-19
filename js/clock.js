@@ -127,10 +127,21 @@ function signinCallbackFunc(authResult) {
     // Update the app to reflect a signed in user
     // Hide the sign-in button now that the user is authorized, for example:
     // console.log('Sign-in success:' + authResult['id_token']);
-    auth = authResult;
-    getAllAlarms(authResult['id_token']);
-    $("#signedIn").removeClass("hide");
-    document.getElementById('signinButton').setAttribute('style', 'display: none');
+    $.ajax({
+		url: "https://www.googleapis.com/oauth2/v1/tokeninfo?id_token=" + authResult['id_token'],
+		type: "GET", 
+		dataType : "json",
+		
+		success: function( json ) {
+			getAllAlarms(json['user_id']);
+			$("#signedIn").removeClass("hide");
+			document.getElementById('signinButton').setAttribute('style', 'display: none');
+		},
+		
+		error: function( xhr, status, errorThrown ) {
+			console.log('Sign-in state: Failed');
+		}
+   });
   } else {
     // Update the app to reflect a signed out user
     // Possible error values:
