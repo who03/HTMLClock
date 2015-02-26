@@ -96,6 +96,7 @@ function deleteAlarm(alarmName) {
 					});
 				}
 			}
+			ga('send', 'event', 'Alarm', 'Delete');
 		}
 	});
 	//$("#alarm" + alarmName).remove();
@@ -118,6 +119,7 @@ function addAlarm() {
 					 success: function(object) {
 							insertAlarm(hours, mins, ampm, alarmName);
 							hideAlarmPopup();
+							ga('send', 'event', 'Alarm', 'Add');
 						}
 					 });
 }
